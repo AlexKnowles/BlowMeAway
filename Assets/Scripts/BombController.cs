@@ -16,13 +16,16 @@ public class BombController : MonoBehaviour
     private Renderer rendererReference;
     private Color solidColour;
     private Color fadedColour;
+    private ParticleSystem particleEmiiter;
 
     private void Start()
     {
         rendererReference = GetComponent<Renderer>();
+        particleEmiiter = GetComponent<ParticleSystem>();
 
         solidColour = rendererReference.material.color;
         fadedColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0f);
+
     }
 
     // Update is called once per frame
@@ -40,6 +43,8 @@ public class BombController : MonoBehaviour
             case BombStates.Moved:
                 //Particals
                 PlayerControllerReference.PushShipFromExplosion(transform.position);
+
+                particleEmiiter.transform.position = transform.position;
 
                 StartTime_Fade = Time.time;
                 State = BombStates.Exploded;
