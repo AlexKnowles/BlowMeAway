@@ -20,6 +20,8 @@ public class BombController : MonoBehaviour
     private ParticleSystem particleEmiiter;
     private Vector3 objectSize;
 
+    private Vector3 EndLocation;
+
     private void Start()
     {
         objectSize = GetComponent<Renderer>().bounds.size;
