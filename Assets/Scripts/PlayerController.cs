@@ -26,18 +26,12 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
-
-        //// Movement ////
-
-        //set screen Bounds
         Vector3 screenBounds = new Vector3(Screen.width, 0, Screen.height);
         Vector2 screen;
-
-        //set offset
-        screen.x = (screenBounds.x) ; //4% of screenBounds.x
+        
+        screen.x = screenBounds.x;
         screen.y = Screen.height;
         
-        //set players position in screen coordinates
         Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);
                
 
@@ -53,11 +47,13 @@ public class PlayerController : MonoBehaviour
         BombController bombInstanceController = bombInstance.GetComponent<BombController>();
         
         bombInstanceController.PlayerControllerReference = this;
-        bombInstanceController.SetupBombLocations(Camera.main.ScreenToWorldPoint(_MousePosition));
+        bombInstanceController.SetupBombLocations(_MousePosition);
 
         Bombs.Add(bombInstance);
 
         Instantiate(bombInstance, transform.position, transform.rotation);
+
+        //bombInstance.GetComponent<Rigidbody>().velocity = transform.TransformDirection(GetComponent<Rigidbody>().velocity);
     }
 
     public void RemoveBomb (GameObject _Bomb)

@@ -21,6 +21,6 @@ public class InputManager : MonoBehaviour
     {
         Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 20);
 
-        PlayerObject.GetComponent<PlayerController>().FireBombAtMousePosition(mousePosition);
+        PlayerObject.GetComponent<PlayerController>().PushShipFromExplosion(Camera.main.ScreenToWorldPoint(mousePosition));
     }
 }
