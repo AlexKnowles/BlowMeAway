@@ -17,6 +17,29 @@ public class PlayerController : MonoBehaviour
     public Boundary boundary;
 
     private List<GameObject> Bombs = new List<GameObject>();
+    private Vector3 PlayerSize;
+
+    private void Start()
+    {
+        PlayerSize = GetComponent<Collider>().bounds.size;
+    }
+
+    void LateUpdate()
+    {
+        Vector3 screenBounds = new Vector3(Screen.width, 0, Screen.height);
+        Vector2 screen;
+        
+        screen.x = screenBounds.x;
+        screen.y = Screen.height;
+        
+        Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);
+               
+
+        if (playerPosScreen.x > Screen.width)
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(-PlayerSize.x, playerPosScreen.y, playerPosScreen.z));
+        else if (playerPosScreen.x < -PlayerSize.x)
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, playerPosScreen.y, playerPosScreen.z));
+    }
 
     public void FireBombAtMousePosition(Vector3 _MousePosition)
     {
@@ -24,11 +47,13 @@ public class PlayerController : MonoBehaviour
         BombController bombInstanceController = bombInstance.GetComponent<BombController>();
         
         bombInstanceController.PlayerControllerReference = this;
-        bombInstanceController.SetupBombLocations(Camera.main.ScreenToWorldPoint(_MousePosition));
+        bombInstanceController.SetupBombLocations(_MousePosition);
 
         Bombs.Add(bombInstance);
 
         Instantiate(bombInstance, transform.position, transform.rotation);
+
+        //bombInstance.GetComponent<Rigidbody>().velocity = transform.TransformDirection(GetComponent<Rigidbody>().velocity);
     }
 
     public void RemoveBomb (GameObject _Bomb)
