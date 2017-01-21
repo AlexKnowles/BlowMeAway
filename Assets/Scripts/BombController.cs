@@ -41,11 +41,8 @@ public class BombController : MonoBehaviour
                 break;
 
             case BombStates.Moved:
-                //Particals
                 PlayerControllerReference.PushShipFromExplosion(transform.position);
-
-                particleEmiiter.transform.position = transform.position;
-
+                particleEmiiter.Play();
                 StartTime_Fade = Time.time;
                 State = BombStates.Exploded;
                 break;
@@ -66,7 +63,24 @@ public class BombController : MonoBehaviour
     {
         rendererReference.material.color = Color.Lerp(solidColour, fadedColour, (Time.time - StartTime_Fade) / BombFadeDuration);
 
-        if (rendererReference.material.color.Equals(fadedColour))
+        if (rendererReference.material.color.Equals(fadedColour)) 
+        {
+            RenderParticleEffect(EndLocation);
+        }
+            
+    }
+
+    private void RenderParticleEffect(Vector3 _EndPosition) 
+    {
+        
+        particleEmiiter.transform.position = _EndPosition;
+        particleEmiiter.Play();
+        Debug.Log(particleEmiiter.time);
+        if (particleEmiiter.time > 20) 
+        {
             PlayerControllerReference.RemoveBomb(gameObject);
+        }
+        
+
     }
 }
