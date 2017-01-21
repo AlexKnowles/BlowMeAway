@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceWaves.Plugins", "SpaceWaves.Plugins.csproj", "{180A1194-A5EB-B2F3-CD3E-2CA842354470}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceWaves", "SpaceWaves.csproj", "{26159C1B-8237-F75D-CB5C-248FD517F4D9}"
