@@ -1,66 +1,69 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-[System.Serializable]
-public class Boundary
+public class ForceAndTime
 {
-    public float xMin = -100;
-    public float xMax = 100;
-    public float zMin = -100;
-    public float zMax = 100;
+    public Vector3 Force;
+    public float Time;
+    public bool Remove = false;
+
+    public ForceAndTime(Vector3 _Force, float _Time)
+    {
+        Force = _Force;
+        Time = _Time; 
+    }
 }
 
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    public Boundary boundary;
 
-    private List<GameObject> Bombs = new List<GameObject>();
+    private List<ForceAndTime> ForcesToExcert = new List<ForceAndTime>();
     private Vector3 PlayerSize;
+    private Rigidbody RigidbodyReference;
+    private GameManager GameManagerReference;
+    private int TopY = 0;
 
     private void Start()
     {
+        GameManagerReference = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         PlayerSize = GetComponent<Collider>().bounds.size;
+        RigidbodyReference = GetComponent<Rigidbody>();
     }
 
     void LateUpdate()
     {
-        Vector3 screenBounds = new Vector3(Screen.width, 0, Screen.height);
-        Vector2 screen;
-        
-        screen.x = screenBounds.x;
-        screen.y = Screen.height;
-        
-        Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);
-               
+        foreach (ForceAndTime force in ForcesToExcert)
+        {
+            if (Time.time >= force.Time)
+            {
+                RigidbodyReference.AddForce(force.Force);
+                force.Remove = true;
+            }
+        }
+
+        ForcesToExcert.RemoveAll(fte => fte.Remove);
+     
+        Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);               
 
         if (playerPosScreen.x > Screen.width)
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(-PlayerSize.x, playerPosScreen.y, playerPosScreen.z));
         else if (playerPosScreen.x < -PlayerSize.x)
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, playerPosScreen.y, playerPosScreen.z));
+
+
+
+        if (TopY < transform.position.y)
+        {
+            TopY = Mathf.CeilToInt(transform.position.y);
+            GameManagerReference.Score = TopY;
+        }
+        else if (playerPosScreen.y <= 0)
+            GameOver();
     }
-
-    public void FireBombAtMousePosition(Vector3 _MousePosition)
-    {
-        GameObject bombInstance = (Resources.Load("Prefabs/Bomb", typeof(GameObject)) as GameObject);
-        BombController bombInstanceController = bombInstance.GetComponent<BombController>();
-        
-        bombInstanceController.PlayerControllerReference = this;
-        bombInstanceController.SetupBombLocations(_MousePosition);
-
-        Bombs.Add(bombInstance);
-
-        Instantiate(bombInstance, transform.position, transform.rotation);
-
-        //bombInstance.GetComponent<Rigidbody>().velocity = transform.TransformDirection(GetComponent<Rigidbody>().velocity);
-    }
-
-    public void RemoveBomb (GameObject _Bomb)
-    {
-        Bombs.Remove(_Bomb);
-        Destroy(_Bomb);
-    }
+    
 
     public void PushShipFromExplosion(Vector3 _ExplosionPosition)
     {
@@ -68,6 +71,12 @@ public class PlayerController : MonoBehaviour
         var distance = heading.magnitude;
         var direction = heading / distance;
 
-        GetComponent<Rigidbody>().AddForce(direction * speed * -1);
+        ForcesToExcert.Add(new ForceAndTime(direction * (speed / (distance / 10)) * -1, Time.time + (distance / 10)));
+    }
+
+    private void GameOver()
+    {
+        //todo
+        Debug.Log("Game Over");
     }
 }
