@@ -14,7 +14,6 @@ public class Boundary
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    public float tilt;
     public Boundary boundary;
 
     private List<GameObject> Bombs = new List<GameObject>();
