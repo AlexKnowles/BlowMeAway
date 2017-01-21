@@ -18,28 +18,35 @@ public class PlayerController : MonoBehaviour
     public Boundary boundary;
 
     private List<GameObject> Bombs = new List<GameObject>();
+    private Vector3 PlayerSize;
 
-    void FixedUpdate()
+    private void Start()
     {
-        //Rigidbody rb = GetComponent<Rigidbody>();
-        //float moveHorizontal = Input.GetAxis("Horizontal");
-        //float moveVertical = Input.GetAxis("Vertical");
-
-        //Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        //rb.velocity = movement * speed;
-
-
-
-        //rb.position = new Vector3
-        //(
-        //    Mathf.Clamp(rb.position.x + 1, boundary.xMin, boundary.xMax),
-        //    0.0f,
-        //    Mathf.Clamp(rb.position.z + 1, boundary.zMin, boundary.zMax)
-        //);
-
-        //rb.rotation = Quaternion.Euler(0.0f, 0.0f, rb.velocity.x * -tilt);
+        PlayerSize = GetComponent<Collider>().bounds.size;
     }
 
+    void LateUpdate()
+    {
+
+        //// Movement ////
+
+        //set screen Bounds
+        Vector3 screenBounds = new Vector3(Screen.width, 0, Screen.height);
+        Vector2 screen;
+
+        //set offset
+        screen.x = (screenBounds.x) ; //4% of screenBounds.x
+        screen.y = Screen.height;
+        
+        //set players position in screen coordinates
+        Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);
+               
+
+        if (playerPosScreen.x > Screen.width)
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(-PlayerSize.x, playerPosScreen.y, playerPosScreen.z));
+        else if (playerPosScreen.x < -PlayerSize.x)
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, playerPosScreen.y, playerPosScreen.z));
+    }
 
     public void FireBombAtMousePosition(Vector3 _MousePosition)
     {
