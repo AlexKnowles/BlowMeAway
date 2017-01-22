@@ -9,6 +9,8 @@ public class PlanetController : MonoBehaviour
     private GameManager GameManagerReference;
     float intervalToNextPlanet;
 
+    private float PreviousScoreWhenPlanetWasAdded = 0;
+
     // Use this for initialization
     void Start()
     {
@@ -22,8 +24,10 @@ public class PlanetController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (Time.time > intervalToNextPlanet && !GameManagerReference.Paused)
-            CreatePlanet(Mathf.CeilToInt(1));//Random.Range(0f, 3f)));
+        if (PreviousScoreWhenPlanetWasAdded < GameManagerReference.Score + 10
+                && Time.time > intervalToNextPlanet 
+                && !GameManagerReference.Paused)
+            CreatePlanet(Mathf.CeilToInt(1));
 
         Vector3 bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 20));
 
@@ -53,7 +57,9 @@ public class PlanetController : MonoBehaviour
         Vector3 newItemPosition = Camera.main.ScreenToWorldPoint(new Vector3(xSeed, Screen.height, 20));
         
         Planets.Add(Instantiate(newPlanet, newItemPosition, Random.rotation, gameObject.transform));
-        
-        intervalToNextPlanet = Time.time + (Random.value * (10 - Mathf.FloorToInt(GameManagerReference.Score / 800)));
+
+        PreviousScoreWhenPlanetWasAdded = GameManagerReference.Score;
+
+        intervalToNextPlanet = Time.time + Mathf.Tan(GameManagerReference.Score + 1);
     }
 }

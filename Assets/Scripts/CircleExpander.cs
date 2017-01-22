@@ -6,18 +6,14 @@ public class CircleExpander : MonoBehaviour
     public int segments;
     public float radius;
     public float GrowthSpeed = 1;
-    public int MaxNumberOfRings = 3;
-    public float DelayBetweenRings = 1;
+    public float FadeSpeed = 1;
 
     public Vector3 StartSize = new Vector3(0.1f, 0.1f, 0.1f);
     public Vector3 FinishSize = new Vector3(20, 20, 20);
 
     private LineRenderer line;
     private float alpha;
-
-    private float startTime;
-
-    private int NumberOfRingss = 1;
+       
 
     void Start()
     {
@@ -32,14 +28,16 @@ public class CircleExpander : MonoBehaviour
         alpha = 0.5f;
         line.material = new Material(Shader.Find("Particles/Additive (Soft)"));
 
-        startTime = Time.time;
+        if (GrowthSpeed < 0)
+            GrowthSpeed = 0.1f;
     }
 
     void FixedUpdate()
     {
-        transform.localScale = Vector3.Lerp(transform.localScale, FinishSize, GrowthSpeed * Time.deltaTime);
 
-        alpha -= Time.deltaTime * GrowthSpeed;
+        transform.localScale = Vector3.MoveTowards(transform.localScale, FinishSize, GrowthSpeed * Time.deltaTime);
+
+        alpha -= Time.deltaTime * FadeSpeed;
         Color start = Color.white;
         start.a = alpha;
         Color end = Color.black;
@@ -47,14 +45,6 @@ public class CircleExpander : MonoBehaviour
 
         line.startColor = start;
         line.endColor = start;
-
-        if (startTime + DelayBetweenRings < Time.time)
-            AddInnerCircle();
-    }
-
-    private void AddInnerCircle()
-    {
-
     }
 
     private void CreatePoints()

@@ -25,17 +25,11 @@ public class InputManager : MonoBehaviour
     private void HandleRightMouseClick()
     {
         Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 20);
-
-        Instantiate(Resources.Load("Prefabs/ExpandingCircle"), Camera.main.ScreenToWorldPoint(mousePosition), Quaternion.identity, Camera.main.transform);
-
+        
         if (GameMangerReference.Paused)
             return;
 
-        //GameObject particleControllerReference = GameObject.FindGameObjectWithTag("ParticleController");
-
-        //if(particleControllerReference != null)
-        //    particleControllerReference.GetComponent<ParticleController>().ParticleEffectOnClick();
-
+        Instantiate(Resources.Load("Prefabs/Explosion"), Camera.main.ScreenToWorldPoint(mousePosition), Quaternion.identity, Camera.main.transform);
         PlayerObject.GetComponent<PlayerController>().PushShipFromExplosion(mousePosition);
     }
 }

@@ -82,7 +82,10 @@ public class PlayerController : MonoBehaviour
             GameManagerReference.Score = TopY;
         }
         else if (playerPosScreen.y <= 0)
+        {
+            GetComponent<AudioSource>().Play();
             GameManagerReference.GameOver();
+        }
     }
 
     private ForceAndTime CalculateForceAndTimeTillHit(Vector3 _ScreenPostionOfExplosion, float _TimeOfExplosion)
