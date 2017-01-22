@@ -5,14 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public int Score = 0;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public bool Paused = false;
+    public Canvas CanvasReference;
+    
+    public void GameOver()
+    {
+        Paused = true;
+        CanvasReference.GetComponent<HUD>().GameOver();
+    }
 }

@@ -60,10 +60,10 @@ Material:
     m_Floats:
     - first:
         name: _Exposure
-      second: 1
+      second: 0.61
     - first:
         name: _Rotation
-      second: 0
+      second: 156
     m_Colors:
     - first:
         name: _Color

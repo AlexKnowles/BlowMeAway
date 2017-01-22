@@ -14,7 +14,7 @@ public class PlanetController : MonoBehaviour
     {
         Planets = new List<GameObject>();
         GameManagerReference = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        CreatePlanet(3);
+        CreatePlanet(1);
 
         intervalToNextPlanet = Time.time + (Random.value * 10);
     }
@@ -22,8 +22,8 @@ public class PlanetController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (Time.time > intervalToNextPlanet)
-            CreatePlanet(Mathf.CeilToInt(Random.Range(1f, 3f)));
+        if (Time.time > intervalToNextPlanet && !GameManagerReference.Paused)
+            CreatePlanet(Mathf.CeilToInt(1));//Random.Range(0f, 3f)));
 
         Vector3 bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 20));
 
@@ -31,8 +31,10 @@ public class PlanetController : MonoBehaviour
 
         foreach (GameObject planet in Planets)
         {
-            if (planet.transform.position.y + planet.GetComponent<Collider>().bounds.size.y < bottomOfScreen.y )                
+            if (planet.transform.position.y + planet.GetComponent<Collider>().bounds.size.y < bottomOfScreen.y)
                 itemsToRemove.Add(planet);
+            else
+                planet.transform.Rotate(Vector3.up, 20 * Time.deltaTime);
         }
 
         foreach (GameObject planet in itemsToRemove)
@@ -50,8 +52,8 @@ public class PlanetController : MonoBehaviour
         float xSeed = Random.Range(0, Screen.width);
         Vector3 newItemPosition = Camera.main.ScreenToWorldPoint(new Vector3(xSeed, Screen.height, 20));
         
-        Planets.Add(Instantiate(newPlanet, newItemPosition, Quaternion.identity, gameObject.transform));
+        Planets.Add(Instantiate(newPlanet, newItemPosition, Random.rotation, gameObject.transform));
         
-        intervalToNextPlanet = Time.time + (Random.value * (10 - Mathf.FloorToInt(GameManagerReference.Score / 1000)));
+        intervalToNextPlanet = Time.time + (Random.value * (10 - Mathf.FloorToInt(GameManagerReference.Score / 800)));
     }
 }

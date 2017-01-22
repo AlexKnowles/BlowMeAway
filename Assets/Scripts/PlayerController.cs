@@ -2,17 +2,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class ForceAndTime
 {
-    public Vector3 Force;
-    public float Time;
-    public bool Remove = false;
+    public Vector3 ForceToExert;
+    public float TimeTillForceApply;
 
     public ForceAndTime(Vector3 _Force, float _Time)
     {
-        Force = _Force;
-        Time = _Time; 
+        ForceToExert = _Force;
+        TimeTillForceApply = _Time; 
+    }
+}
+
+public class ExplosionObject
+{
+    public Vector3 ScreenPositionOfExplosion;
+    public float ExplosionStartTime;
+    public ForceAndTime CalculatedValues;
+    public bool Remove = false;
+
+    public ExplosionObject(Vector3 _ExplosionLocation, float _ExplosionStartTime)
+    {
+        ScreenPositionOfExplosion = _ExplosionLocation;
+        ExplosionStartTime = _ExplosionStartTime;
     }
 }
 
@@ -20,7 +34,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
 
-    private List<ForceAndTime> ForcesToExcert = new List<ForceAndTime>();
+    private List<ExplosionObject> Explosions = new List<ExplosionObject>();
     private Vector3 PlayerSize;
     private Rigidbody RigidbodyReference;
     private GameManager GameManagerReference;
@@ -35,16 +49,23 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
-        foreach (ForceAndTime force in ForcesToExcert)
+        if (GameManagerReference.Paused)
+            return;
+
+
+        foreach (ExplosionObject explosion in Explosions)
         {
-            if (Time.time >= force.Time)
-            {
-                RigidbodyReference.AddForce(force.Force);
-                force.Remove = true;
-            }
+            explosion.CalculatedValues = CalculateForceAndTimeTillHit(explosion.ScreenPositionOfExplosion, explosion.ExplosionStartTime);
+
+            if (explosion.CalculatedValues.TimeTillForceApply > Time.time)
+                continue;
+
+            RigidbodyReference.AddForce(explosion.CalculatedValues.ForceToExert);
+            explosion.Remove = true;
+            
         }
 
-        ForcesToExcert.RemoveAll(fte => fte.Remove);
+        Explosions.RemoveAll(fte => fte.Remove);
      
         Vector3 playerPosScreen = Camera.main.WorldToScreenPoint(transform.position);               
 
@@ -61,22 +82,20 @@ public class PlayerController : MonoBehaviour
             GameManagerReference.Score = TopY;
         }
         else if (playerPosScreen.y <= 0)
-            GameOver();
-    }
-    
-
-    public void PushShipFromExplosion(Vector3 _ExplosionPosition)
-    {
-        var heading = _ExplosionPosition - transform.position;
-        var distance = heading.magnitude;
-        var direction = heading / distance;
-
-        ForcesToExcert.Add(new ForceAndTime(direction * (speed / (distance / 10)) * -1, Time.time + (distance / 10)));
+            GameManagerReference.GameOver();
     }
 
-    private void GameOver()
+    private ForceAndTime CalculateForceAndTimeTillHit(Vector3 _ScreenPostionOfExplosion, float _TimeOfExplosion)
     {
-        //todo
-        Debug.Log("Game Over");
+        Vector3 compareBetweenPlayerAndExplosion = (Camera.main.ScreenToWorldPoint(_ScreenPostionOfExplosion) - transform.position);
+        float distanceBetweenPlayerAndExplosion = compareBetweenPlayerAndExplosion.magnitude;
+        Vector3 direction = (compareBetweenPlayerAndExplosion / distanceBetweenPlayerAndExplosion);
+        
+        return new ForceAndTime(direction * (speed / (distanceBetweenPlayerAndExplosion / 10)) * -1, _TimeOfExplosion + (distanceBetweenPlayerAndExplosion / 10));
+    }
+
+    public void PushShipFromExplosion(Vector3 _ExplosionScreenPosition)
+    {
+        Explosions.Add(new ExplosionObject(_ExplosionScreenPosition, Time.time));       
     }
 }
