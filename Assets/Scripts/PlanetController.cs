@@ -27,7 +27,7 @@ public class PlanetController : MonoBehaviour
         if (PreviousScoreWhenPlanetWasAdded < GameManagerReference.Score + 10
                 && Time.time > intervalToNextPlanet 
                 && !GameManagerReference.Paused)
-            CreatePlanet(Mathf.CeilToInt(1));
+            CreatePlanet(Random.Range(1, 4));
 
         Vector3 bottomOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 20));
 

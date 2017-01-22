@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4142201828648984}
   - component: {fileID: 33207099609684894}
-  - component: {fileID: 135843573298575366}
   - component: {fileID: 23486761110952966}
-  - component: {fileID: 54332277208634926}
+  - component: {fileID: 54784254602475406}
+  - component: {fileID: 64923963178712330}
   m_Layer: 0
   m_Name: Planet_002
   m_TagString: Untagged
@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1547746545487662}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 862, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -56,7 +56,13 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6a3d5123a2b81e34ca5d5c814903d9f4, type: 2}
+  - {fileID: 2100000, guid: 50fb85d46b7008746baa174820cf530d, type: 2}
+  - {fileID: 2100000, guid: 2fe85af26faa6e44ab587807a418c8a4, type: 2}
+  - {fileID: 2100000, guid: b232e2e18e99e0044a391da2bd7acbb8, type: 2}
+  - {fileID: 2100000, guid: 739886017908f49448a373969e619176, type: 2}
+  - {fileID: 2100000, guid: cf10386dd6f4d7545a77fe5a084c44e7, type: 2}
+  - {fileID: 2100000, guid: 19603deb164a1e546a0f919001a74e7d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -64,7 +70,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
+  m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_SelectedEditorRenderState: 3
@@ -80,8 +86,8 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1547746545487662}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54332277208634926
+  m_Mesh: {fileID: 4300000, guid: d8dc12bb71d2136489c8cede51edfde3, type: 3}
+--- !u!54 &54784254602475406
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -96,8 +102,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &135843573298575366
-SphereCollider:
+--- !u!64 &64923963178712330
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -106,5 +112,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: d8dc12bb71d2136489c8cede51edfde3, type: 3}
